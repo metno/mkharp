@@ -98,10 +98,10 @@ func (db *Database) Add(data Data) error {
 			data.Elev,
 		}
 		for _, p := range db.parameters {
+			var value interface{}
 			value, ok := obs.Data[p.Parameter]
 			if !ok {
-				tx.Rollback()
-				return fmt.Errorf("missing value for parameter %s", p.Parameter)
+				value = ""
 			}
 			args = append(args, value)
 		}

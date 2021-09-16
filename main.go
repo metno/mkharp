@@ -35,10 +35,9 @@ func main() {
 				},
 			},
 			{
-				ValidDate: time.Date(2021, 9, 15, 6, 0, 0, 0, time.UTC),
+				ValidDate: time.Date(2021, 9, 16, 7, 0, 0, 0, time.UTC),
 				Data: map[string]float32{
-					"T2m":       12.5,
-					"AccPcp12h": 0.1,
+					"T2m": 12.5,
 				},
 			},
 		},
