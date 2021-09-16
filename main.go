@@ -22,7 +22,6 @@ func main() {
 		},
 	}
 	data := obs.Data{
-
 		SID:  1492,
 		Lon:  10.72,
 		Lat:  59.9423,
@@ -33,6 +32,13 @@ func main() {
 				Data: map[string]float32{
 					"T2m":       12.2,
 					"AccPcp12h": 2.1,
+				},
+			},
+			{
+				ValidDate: time.Date(2021, 9, 15, 6, 0, 0, 0, time.UTC),
+				Data: map[string]float32{
+					"T2m":       12.5,
+					"AccPcp12h": 0.1,
 				},
 			},
 		},
