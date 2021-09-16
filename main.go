@@ -21,16 +21,19 @@ func main() {
 			Units:      "kg/m^2",
 		},
 	}
-	data := []obs.Data{
-		{
-			ValidDate: time.Date(2021, 9, 16, 6, 0, 0, 0, time.UTC),
-			SID:       1492,
-			Lon:       10.72,
-			Lat:       59.9423,
-			Elev:      94,
-			Data: map[string]float32{
-				"T2m":       12.2,
-				"AccPcp12h": 2.1,
+	data := obs.Data{
+
+		SID:  1492,
+		Lon:  10.72,
+		Lat:  59.9423,
+		Elev: 94,
+		Observations: []obs.Observation{
+			{
+				ValidDate: time.Date(2021, 9, 16, 6, 0, 0, 0, time.UTC),
+				Data: map[string]float32{
+					"T2m":       12.2,
+					"AccPcp12h": 2.1,
+				},
 			},
 		},
 	}
@@ -41,7 +44,7 @@ func main() {
 	}
 	defer db.Close()
 
-	if err := db.Add(data...); err != nil {
+	if err := db.Add(data); err != nil {
 		log.Fatalln(err)
 	}
 }

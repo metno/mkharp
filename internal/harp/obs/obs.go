@@ -24,11 +24,15 @@ type Parameter struct {
 }
 
 type Data struct {
+	SID          int
+	Lat          float32
+	Lon          float32
+	Elev         int
+	Observations []Observation
+}
+
+type Observation struct {
 	ValidDate time.Time
-	SID       int
-	Lat       float32
-	Lon       float32
-	Elev      int
 	Data      map[string]float32
 }
 
@@ -63,7 +67,7 @@ func (db *Database) Close() error {
 	return nil
 }
 
-func (db *Database) Add(data ...Data) error {
+func (db *Database) Add(data Data) error {
 	var baseStatement strings.Builder
 	fmt.Fprintf(&baseStatement, "INSERT INTO %s (validdate, SID, lat, lon, elev", strings.ToUpper(db.obstype))
 	for _, p := range db.parameters {
@@ -85,16 +89,16 @@ func (db *Database) Add(data ...Data) error {
 		return err
 	}
 
-	for _, d := range data {
+	for _, obs := range data.Observations {
 		args := []interface{}{
-			d.ValidDate.Unix(),
-			d.SID,
-			d.Lat,
-			d.Lon,
-			d.Elev,
+			obs.ValidDate.Unix(),
+			data.SID,
+			data.Lat,
+			data.Lon,
+			data.Elev,
 		}
 		for _, p := range db.parameters {
-			value, ok := d.Data[p.Parameter]
+			value, ok := obs.Data[p.Parameter]
 			if !ok {
 				tx.Rollback()
 				return fmt.Errorf("missing value for parameter %s", p.Parameter)
