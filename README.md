@@ -1,4 +1,4 @@
-# Create observations for harp
+# Create observation files for harp
 
 This application creates [harp](https://github.com/harphub/harp) observation files from csv files. It is meant for making harp more accessible when you have observation data in a non-standard format.
 
