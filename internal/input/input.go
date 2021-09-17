@@ -46,8 +46,11 @@ func (r *Reader) Read() ([]obs.Observation, error) {
 	var ret []obs.Observation
 	for {
 		record, err := r.r.Read()
-		if err == io.EOF {
-			break
+		if err != nil {
+			if err == io.EOF {
+				break
+			}
+			return nil, err
 		}
 		if len(record) != len(r.fields) {
 			return nil, errors.New("size mismatch - header/data")
