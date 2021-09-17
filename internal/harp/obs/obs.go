@@ -5,22 +5,17 @@ import (
 	"errors"
 	"fmt"
 	"regexp"
+	"sort"
 	"strings"
 	"time"
 
 	_ "github.com/mattn/go-sqlite3"
+	"github.com/metno/mkharp/internal/harp"
 )
 
 type Database struct {
-	db         *sql.DB
-	obstype    string
-	parameters []Parameter
-}
-
-type Parameter struct {
-	Parameter  string
-	AccumHours float32
-	Units      string
+	db      *sql.DB
+	obstype string
 }
 
 type Data struct {
@@ -31,12 +26,38 @@ type Data struct {
 	Observations []Observation
 }
 
+func (d *Data) Parameters() ([]harp.Parameter, error) {
+	encounterdParameters := make(map[string]bool)
+	for _, obs := range d.Observations {
+		for parameter := range obs.Data {
+			encounterdParameters[parameter] = true
+		}
+	}
+	var ret []harp.Parameter
+	for p := range encounterdParameters {
+		harpParameter := harp.GetParameter(p)
+		if harpParameter == nil {
+			return nil, fmt.Errorf("%s: no such parameter", p)
+		}
+		ret = append(ret, *harpParameter)
+	}
+
+	sort.Slice(
+		ret,
+		func(i, j int) bool {
+			return ret[i].Parameter < ret[j].Parameter
+		},
+	)
+
+	return ret, nil
+}
+
 type Observation struct {
 	ValidDate time.Time
 	Data      map[string]float32
 }
 
-func open(filename, obstype string) (*Database, error) {
+func Open(filename, obstype string) (*Database, error) {
 	db, err := sql.Open("sqlite3", filename)
 	if err != nil {
 		return nil, err
@@ -47,8 +68,8 @@ func open(filename, obstype string) (*Database, error) {
 	}, nil
 }
 
-func Create(filename, obstype string, parameters []Parameter) (*Database, error) {
-	db, err := open(filename, obstype)
+func Create(filename, obstype string, parameters []harp.Parameter) (*Database, error) {
+	db, err := Open(filename, obstype)
 	if err != nil {
 		return nil, err
 	}
@@ -57,9 +78,6 @@ func Create(filename, obstype string, parameters []Parameter) (*Database, error)
 		db.Close()
 		return nil, err
 	}
-
-	db.parameters = parameters
-
 	return db, nil
 }
 
@@ -69,12 +87,18 @@ func (db *Database) Close() error {
 
 func (db *Database) Add(data Data) error {
 	var baseStatement strings.Builder
+
+	allParameters, err := data.Parameters()
+	if err != nil {
+		return err
+	}
+
 	fmt.Fprintf(&baseStatement, "INSERT INTO %s (validdate, SID, lat, lon, elev", strings.ToUpper(db.obstype))
-	for _, p := range db.parameters {
+	for _, p := range allParameters {
 		fmt.Fprintf(&baseStatement, ", %s", p.Parameter)
 	}
 	fmt.Fprint(&baseStatement, ") VALUES (?, ?, ?, ?, ?")
-	for range db.parameters {
+	for range allParameters {
 		fmt.Fprint(&baseStatement, ", ?")
 	}
 	fmt.Fprint(&baseStatement, ")")
@@ -97,7 +121,7 @@ func (db *Database) Add(data Data) error {
 			data.Lon,
 			data.Elev,
 		}
-		for _, p := range db.parameters {
+		for _, p := range allParameters {
 			var value interface{}
 			value, ok := obs.Data[p.Parameter]
 			if !ok {
@@ -123,7 +147,7 @@ func isValidNameInSql(word string) bool {
 	return tableNamePattern.MatchString(word)
 }
 
-func (db *Database) addObstype(obstype string, parameters []Parameter) error {
+func (db *Database) addObstype(obstype string, parameters []harp.Parameter) error {
 	obstype = strings.ToUpper(obstype)
 	if !isValidNameInSql(obstype) {
 		return errors.New("invalid obstype")

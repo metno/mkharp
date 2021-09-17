@@ -1,51 +1,56 @@
 package main
 
 import (
+	"flag"
 	"log"
-	"time"
+	"os"
 
 	"github.com/metno/mkharp/internal/harp/obs"
+	"github.com/metno/mkharp/internal/input"
 )
 
 func main() {
+	out := flag.String("out", "harp.sqlite", "write to the given file")
+	obstype := flag.String("obstype", "synop", "write the given observation type")
+	sid := flag.Int("sid", 1, "station id to use")
+	lon := flag.Float64("lon", 0, "Longitude")
+	lat := flag.Float64("lat", 0, "Latitude")
+	elev := flag.Int("elevation", 0, "elevation")
+	createNew := flag.Bool("create", false, "initialize a new database")
+	flag.Parse()
 
-	parameters := []obs.Parameter{
-		{
-			Parameter:  "T2m",
-			AccumHours: 0.0,
-			Units:      "degC",
-		},
-		{
-			Parameter:  "AccPcp12h",
-			AccumHours: 12.0,
-			Units:      "kg/m^2",
-		},
-	}
-	data := obs.Data{
-		SID:  1492,
-		Lon:  10.72,
-		Lat:  59.9423,
-		Elev: 94,
-		Observations: []obs.Observation{
-			{
-				ValidDate: time.Date(2021, 9, 16, 6, 0, 0, 0, time.UTC),
-				Data: map[string]float32{
-					"T2m":       12.2,
-					"AccPcp12h": 2.1,
-				},
-			},
-			{
-				ValidDate: time.Date(2021, 9, 16, 7, 0, 0, 0, time.UTC),
-				Data: map[string]float32{
-					"T2m": 12.5,
-				},
-			},
-		},
-	}
-
-	db, err := obs.Create("harp.sqlite", "synop", parameters)
+	reader, err := input.Open(os.Stdin)
 	if err != nil {
 		log.Fatalln(err)
+	}
+	observations, err := reader.Read()
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	data := obs.Data{
+		SID:          *sid,
+		Lon:          float32(*lon),
+		Lat:          float32(*lat),
+		Elev:         *elev,
+		Observations: observations,
+	}
+
+	var db *obs.Database
+	if *createNew {
+		parameters, err := data.Parameters()
+		if err != nil {
+			log.Fatalln(err)
+		}
+		db, err = obs.Create(*out, *obstype, parameters)
+		if err != nil {
+			log.Fatalln(err)
+		}
+	} else {
+		db, err = obs.Open(*out, *obstype)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	}
 	defer db.Close()
 
