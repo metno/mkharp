@@ -1,6 +1,6 @@
 # Installation
 
-Binary distributions are currently only available for linux/amd64. They can be downloaded from the [releases](../releases) page. Download the latest, and unpack into a folder where your path is set, for example like this:
+Binary distributions are currently only available for linux/amd64. They can be downloaded from the [releases](https://github.com/metno/mkharp/releases/) page. Download the latest, and unpack into a folder where your path is set, for example like this:
 
 ```bash
 wget https://github.com/metno/mkharp/releases/download/v0.1.0/mkharp-v0.1.0-linux-amd64.tar.gz
