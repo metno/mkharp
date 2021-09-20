@@ -4,11 +4,13 @@ set -euo pipefail
 
 export GOOS=linux
 export GOARCH=amd64
-export CGO_ENABLED=0
 
-TAG=v0.1.2
+TAG=v0.1.3
 
-go build -a -ldflags '-extldflags "-static"' .
+#go build
+
+docker build -t "mkharp:$TAG" -f scripts/build.dockerfile .
+docker run --rm "mkharp:$TAG" cat /go/bin/mkharp > mkharp && chmod 775 mkharp
 
 mkdir -p release
 cd release/
