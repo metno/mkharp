@@ -8,6 +8,8 @@ The best way to install this is by downloading a binary release for. Detailed in
 
 ## Invocation
 
+A mor complete example of how to use this application can be found [here](docs/usage.md).
+
 The application takes several command-line arguments, many of which are mandatory. Run the application with `--help` to see the full list of arguments.
 
 An example invocation may look like this:
