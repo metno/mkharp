@@ -6,7 +6,7 @@ export GOOS=linux
 export GOARCH=amd64
 export CGO_ENABLED=0
 
-TAG=v0.1.0
+TAG=v0.1.2
 
 go build -a -ldflags '-extldflags "-static"' .
 
