@@ -1,6 +1,6 @@
 # Usage example
 
-This is an example of how to use the `mkharp` application. Is assumes that you have [installed](installation.md) the latest version of `mkharp.
+This is an example of how to use the `mkharp` application. Is assumes that you have [installed](installation.md) the latest version of mkharp.
 
 ## Step one: Create input file
 
@@ -34,7 +34,7 @@ This will create a harp observation file, called `OBSTABLE_2021.sqlite`, and pop
 
 ## Step three: Add more data to the same file (optional)
 
-If you create another file with observations, either for other times, or other stations, you can run the same command as before, while dropping the `-create` command line argument. For example, if you have another observation file, called `more_data.csv`, you can add that to an existing harp file, using the following command:
+If you create another csv file with observations, either for other times, or other stations, you can run the same command as before, while dropping the `-create` command line argument. For example, if you have another observation file, called `more_data.csv`, you can add that to an existing harp file, using the following command:
 
 ```bash
 mkharp \
