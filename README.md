@@ -1,6 +1,6 @@
 # Create observation files for harp
 
-This application creates [harp](https://github.com/harphub/harp) observation files from csv files. It is meant for making harp more accessible when you have observation data in a non-standard format.
+This application creates [harp](https://github.com/harphub/harp) observation files from [csv](https://en.wikipedia.org/wiki/Comma-separated_values) files. It is meant for making harp more accessible when you have observation data in a non-standard format, by providing a conversion from a very simple csv format to the more complex file format expected by harp.
 
 ## Installation
 
