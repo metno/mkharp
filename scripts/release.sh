@@ -2,11 +2,13 @@
 
 set -euo pipefail
 
-GOOS=linux
-GOARCH=amd64
+export GOOS=linux
+export GOARCH=amd64
+export CGO_ENABLED=0
+
 TAG=v0.1.0
 
-go build 
+go build -a -ldflags '-extldflags "-static"' .
 
 mkdir -p release
 cd release/
