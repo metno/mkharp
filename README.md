@@ -2,6 +2,10 @@
 
 This application creates [harp](https://github.com/harphub/harp) observation files from csv files. It is meant for making harp more accessible when you have observation data in a non-standard format.
 
+## Installation
+
+The best way to install this is by downloading a binary release for. Detailed instructions for how to do this is available [here](docs/installation.md).
+
 ## Invocation
 
 The application takes several command-line arguments, many of which are mandatory. Run the application with `--help` to see the full list of arguments.
