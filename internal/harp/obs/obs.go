@@ -125,7 +125,7 @@ func (db *Database) Add(data Data) error {
 			var value interface{}
 			value, ok := obs.Data[p.Parameter]
 			if !ok {
-				value = ""
+				value = nil
 			}
 			args = append(args, value)
 		}
