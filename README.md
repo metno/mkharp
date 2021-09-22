@@ -30,7 +30,7 @@ The application takes several command-line arguments, many of which are mandator
 An example invocation may look like this:
 
 ```bash
-$ mkharp -create -sid 1492 -elevation 94 -lat 10.72 -lon 59.9423 -obstype synop -out OBSTABLE_2021.sqlite < data.csv
+mkharp -create -sid 1492 -elevation 94 -lat 10.72 -lon 59.9423 -obstype synop -out OBSTABLE_2021.sqlite < data.csv
 ```
 
 This creates a file, called `OBSTABLE_2021.sqlite`, populating with data for a station with id `1492`, and the given latitude, longitude and elevation. Observation type is set to synop, and the actual observation data is read from a file, called `data.csv`. The format of the data file is described above.
