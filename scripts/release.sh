@@ -5,7 +5,7 @@ set -euo pipefail
 export GOOS=linux
 export GOARCH=amd64
 
-TAG=v0.1.3
+TAG=v0.1.4
 
 #go build
 
