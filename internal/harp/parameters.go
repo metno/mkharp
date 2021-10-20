@@ -14,7 +14,18 @@ func GetParameter(name string) *Parameter {
 			AccumHours: 0,
 			Units:      "degC",
 		}
-
+	case "Tmax":
+		return &Parameter{
+			Parameter:  "Tmax",
+			AccumHours: 0,
+			Units:      "degC",
+		}
+	case "Tmin":
+		return &Parameter{
+			Parameter:  "Tmin",
+			AccumHours: 0,
+			Units:      "degC",
+		}
 	case "AccPcp1h":
 		return &Parameter{
 			Parameter:  "AccPcp1h",
